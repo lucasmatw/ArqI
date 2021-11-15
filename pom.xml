@@ -179,6 +179,12 @@
                             <goal>check</goal>
                         </goals>
                         <configuration>
+                            <excludes>
+                                <exclude>**/*config.*</exclude>
+                                <exclude>**/*exceptions.*</exclude>
+                                <exclude>**/*filter.*</exclude>
+                                <exclude>**/SpringBootHibernateApplication*</exclude>
+                            </excludes>
                             <rules>
                                 <rule>
                                     <element>BUNDLE</element>
