@@ -18,20 +18,28 @@ public class PurchaseService {
     private final DateService dateService;
 
     public PurchaseProduct createPurchase(PurchaseRequest purchaseRequest) {
-        // validate stock
 
-        Product product = productService.getProduct(purchaseRequest.getProductId())
+        PurchaseProduct purchaseProduct = productService.getProduct(purchaseRequest.getProductId())
+                .map(product -> takeStock(product, purchaseRequest.getQuantity()))
+                .map(product -> createPurchase(purchaseRequest, product))
                 .orElseThrow(() -> new ValidationException("Invalid product"));
-        User user = userService.getUserForMail(purchaseRequest.getBuyerEmail());
-
-        LocalDateTime creationDate = dateService.getNowDate();
-
-        int quantity = purchaseRequest.getQuantity();
-
-        PurchaseProduct purchaseProduct = new PurchaseProduct(product, user, creationDate, quantity, PurchaseStatus.CONFIRMED);
-
-        // reduce stock
 
         return purchaseProductRepository.save(purchaseProduct);
+    }
+
+    private PurchaseProduct createPurchase(PurchaseRequest purchaseRequest, Product product) {
+        User user = userService.getUserForMail(purchaseRequest.getBuyerEmail());
+        LocalDateTime creationDate = dateService.getNowDate();
+        return new PurchaseProduct(product, user, creationDate, purchaseRequest.getQuantity(), PurchaseStatus.CONFIRMED);
+    }
+
+    private Product takeStock(Product product, int quantity) {
+        if (product.getStock() < quantity) {
+            throw new ValidationException("No stock available");
+        }
+
+        product.setStock(product.getStock() - quantity);
+        productService.updateProduct(product);
+        return product;
     }
 }

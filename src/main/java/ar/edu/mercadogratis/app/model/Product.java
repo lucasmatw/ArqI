@@ -11,7 +11,7 @@ import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.Objects;
 
-@Builder
+@Builder(toBuilder = true)
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -32,6 +32,7 @@ public class Product extends BaseEntity {
     @Min(1)
     private BigDecimal price;
 
+    @Min(0)
     private int stock;
 
     @NotBlank

@@ -1,7 +1,6 @@
 package ar.edu.mercadogratis.app.controller;
 
 
-import ar.edu.mercadogratis.app.model.Product;
 import ar.edu.mercadogratis.app.model.PurchaseProduct;
 import ar.edu.mercadogratis.app.model.PurchaseRequest;
 import ar.edu.mercadogratis.app.service.PurchaseService;
@@ -25,9 +24,7 @@ public class PurchaseController {
     @PostMapping
     public ResponseEntity<PurchaseProduct> createPurchase(@Valid @RequestBody PurchaseRequest purchaseRequest) {
 
-        System.out.println("PurchaseRequest ? " + purchaseRequest);
         PurchaseProduct purchase = purchaseService.createPurchase(purchaseRequest);
-
         return ResponseEntity.ok(purchase);
     }
 }
