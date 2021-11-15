@@ -28,6 +28,9 @@ public class UserControllerTest {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private ObjectMapper objectMapper;
+
     @Test
     void testRegisterUser() throws JsonProcessingException {
 
@@ -42,9 +45,7 @@ public class UserControllerTest {
                 .email("an_email@mail.com")
                 .cuit("22332233")
                 .build();
-
-        ObjectMapper objectMapper = new ObjectMapper();
-
+        
         HttpEntity<String> request =
                 new HttpEntity<>(objectMapper.writeValueAsString(user), headers);
 
