@@ -27,8 +27,10 @@ public class PurchaseServiceTest {
     static class TestContextConfiguration {
         @Bean
         public PurchaseService purchaseService(UserService userService, ProductService productService,
-                                               PurchaseProductRepository purchaseProductRepository, DateService dateService) {
-            return new PurchaseService(userService, productService, purchaseProductRepository, dateService);
+                                               PurchaseProductRepository purchaseProductRepository, DateService dateService,
+                                               MoneyAccountService moneyAccountService) {
+            return new PurchaseService(userService, productService, purchaseProductRepository,
+                    dateService, moneyAccountService);
         }
     }
 
@@ -46,6 +48,9 @@ public class PurchaseServiceTest {
 
     @MockBean
     private DateService dateService;
+
+    @MockBean
+    private MoneyAccountService moneyAccountService;
 
     @Test
     public void testCreatePurchase() {

@@ -17,6 +17,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final IEmailService emailService;
     private final PasswordGeneratorService passwordGeneratorService;
+    private final MoneyAccountService moneyAccountService;
 
     @Transactional
     public User getUser(Long id) {
@@ -34,7 +35,10 @@ public class UserService {
         sendRegistrationEmail(user, generatedPwd);
         user.setPassword(generatedPwd);
 
-        return userRepository.save(user).getId();
+        User savedUser = userRepository.save(user);
+        moneyAccountService.registerAccount(savedUser);
+
+        return savedUser.getId();
     }
 
     private void sendRegistrationEmail(User user, String generatedPwd) {

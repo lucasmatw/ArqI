@@ -16,15 +16,27 @@ public class PurchaseService {
     private final ProductService productService;
     private final PurchaseProductRepository purchaseProductRepository;
     private final DateService dateService;
+    private final MoneyAccountService moneyAccountService;
 
     public PurchaseProduct createPurchase(PurchaseRequest purchaseRequest) {
 
         PurchaseProduct purchaseProduct = productService.getProduct(purchaseRequest.getProductId())
                 .map(product -> takeStock(product, purchaseRequest.getQuantity()))
                 .map(product -> createPurchase(purchaseRequest, product))
+                .map(this::registerTransaction)
                 .orElseThrow(() -> new ValidationException("Invalid product"));
 
         return purchaseProductRepository.save(purchaseProduct);
+    }
+
+    private PurchaseProduct registerTransaction(PurchaseProduct purchase) {
+        User buyer = purchase.getBuyer();
+        User seller = userService.getUserForMail(purchase.getProduct().getSeller());
+
+        moneyAccountService.creditAmount(seller, purchase.getPrice());
+        moneyAccountService.debitAmount(buyer, purchase.getPrice());
+
+        return purchase;
     }
 
     private PurchaseProduct createPurchase(PurchaseRequest purchaseRequest, Product product) {
