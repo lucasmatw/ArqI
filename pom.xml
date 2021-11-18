@@ -180,9 +180,10 @@
                         </goals>
                         <configuration>
                             <excludes>
-                                <exclude>**/*config.*</exclude>
-                                <exclude>**/*exceptions.*</exclude>
-                                <exclude>**/*filter.*</exclude>
+                                <exclude>**/config/*</exclude>
+                                <exclude>**/exceptions/*</exclude>
+                                <exclude>**/filter/*</exclude>
+                                <exclude>**/model/*</exclude>
                                 <exclude>**/SpringBootHibernateApplication*</exclude>
                             </excludes>
                             <rules>
