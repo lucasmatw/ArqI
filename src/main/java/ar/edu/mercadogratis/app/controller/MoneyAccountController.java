@@ -1,6 +1,7 @@
 package ar.edu.mercadogratis.app.controller;
 
 
+import ar.edu.mercadogratis.app.model.AddFundsRequest;
 import ar.edu.mercadogratis.app.model.Product;
 import ar.edu.mercadogratis.app.model.User;
 import ar.edu.mercadogratis.app.service.MoneyAccountService;
@@ -29,11 +30,5 @@ public class MoneyAccountController {
         User user = userService.getUser(addFundsRequest.getUserId());
         BigDecimal newBalance = moneyAccountService.creditAmount(user, addFundsRequest.getAmount());
         return ResponseEntity.ok(newBalance);
-    }
-
-    @Data
-    static class AddFundsRequest {
-        private Long userId;
-        private BigDecimal amount;
     }
 }
