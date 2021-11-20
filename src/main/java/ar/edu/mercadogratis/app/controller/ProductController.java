@@ -5,11 +5,15 @@ import ar.edu.mercadogratis.app.model.Product;
 import ar.edu.mercadogratis.app.model.ProductCategory;
 import ar.edu.mercadogratis.app.model.SearchProductRequest;
 import ar.edu.mercadogratis.app.service.ProductService;
+import ar.edu.mercadogratis.app.service.batch.ProductBatchLoadService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.batch.core.BatchStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Optional;
 
@@ -20,6 +24,7 @@ import java.util.Optional;
 public class ProductController {
 
     private final ProductService productService;
+    private final ProductBatchLoadService productBatchLoadService;
 
     @GetMapping("/{productId}")
     public Product getProduct(@PathVariable Long productId) {
@@ -61,5 +66,11 @@ public class ProductController {
                 .minPrice(minPrice)
                 .build();
         return productService.searchProduct(search);
+    }
+
+    @PostMapping("/batch")
+    public ResponseEntity<BatchStatus> batchLoad(@RequestParam("file") MultipartFile file) throws IOException {
+        BatchStatus batchStatus = productBatchLoadService.loadCsvInput(file.getInputStream());
+        return ResponseEntity.ok(batchStatus);
     }
 }

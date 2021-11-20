@@ -29,6 +29,11 @@ public class ProductService {
     }
 
     @Transactional
+    public Iterable<Product> saveAllProducts(List<Product> products) {
+        return productRepository.saveAll(products);
+    }
+
+    @Transactional
     public void updateProduct(Product product) {
         productRepository.save(product);
     }
