@@ -28,9 +28,10 @@ public class PurchaseServiceTest {
         @Bean
         public PurchaseService purchaseService(UserService userService, ProductService productService,
                                                PurchaseProductRepository purchaseProductRepository, DateService dateService,
-                                               MoneyAccountService moneyAccountService) {
+                                               MoneyAccountService moneyAccountService,
+                                               PurchaseEventProducerService purchaseEventProducerService) {
             return new PurchaseService(userService, productService, purchaseProductRepository,
-                    dateService, moneyAccountService);
+                    dateService, moneyAccountService, purchaseEventProducerService);
         }
     }
 
@@ -51,6 +52,9 @@ public class PurchaseServiceTest {
 
     @MockBean
     private MoneyAccountService moneyAccountService;
+
+    @MockBean
+    private PurchaseEventProducerService purchaseEventProducerService;
 
     @Test
     public void testCreatePurchase() {

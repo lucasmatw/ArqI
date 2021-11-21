@@ -36,7 +36,7 @@ public class MoneyAccountService {
 
     public BigDecimal creditAmount(User user, BigDecimal amount) {
         MoneyAccount moneyAccount = moneyAccountRepository.getByUser(user)
-                .orElseThrow(() -> new ValidationException("Account not found for user"));
+                .orElseThrow(() -> new ValidationException("Account not found for user: " + user.getEmail()));
 
         moneyAccount.addToBalance(amount);
         moneyAccountRepository.save(moneyAccount);

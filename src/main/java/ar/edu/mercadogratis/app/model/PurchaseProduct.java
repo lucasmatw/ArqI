@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Entity
+@ToString
 public class PurchaseProduct extends BaseEntity {
 
     @ManyToOne

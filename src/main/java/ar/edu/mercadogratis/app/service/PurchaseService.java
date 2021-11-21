@@ -18,15 +18,23 @@ public class PurchaseService {
     private final DateService dateService;
     private final MoneyAccountService moneyAccountService;
 
+    private final PurchaseEventProducerService purchaseEventProducerService;
+
     public PurchaseProduct createPurchase(PurchaseRequest purchaseRequest) {
 
         PurchaseProduct purchaseProduct = productService.getProduct(purchaseRequest.getProductId())
                 .map(product -> takeStock(product, purchaseRequest.getQuantity()))
                 .map(product -> createPurchase(purchaseRequest, product))
                 .map(this::registerTransaction)
+                .map(this::publishPurchaseEvent)
                 .orElseThrow(() -> new ValidationException("Invalid product"));
 
         return purchaseProductRepository.save(purchaseProduct);
+    }
+
+    private PurchaseProduct publishPurchaseEvent(PurchaseProduct purchaseProduct) {
+        purchaseEventProducerService.publish(purchaseProduct);
+        return purchaseProduct;
     }
 
     private PurchaseProduct registerTransaction(PurchaseProduct purchase) {

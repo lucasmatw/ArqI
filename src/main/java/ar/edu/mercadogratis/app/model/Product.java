@@ -17,6 +17,7 @@ import java.util.Objects;
 @Getter
 @Setter
 @Entity
+@ToString
 @SQLDelete(sql = "UPDATE Product SET status = 'DELETED' WHERE id=?")
 public class Product extends BaseEntity {
 
