@@ -1,11 +1,14 @@
 package ar.edu.mercadogratis.app.controller;
 
+import ar.edu.mercadogratis.app.dao.ProductRepository;
 import ar.edu.mercadogratis.app.model.Product;
 import ar.edu.mercadogratis.app.model.ProductCategory;
 import ar.edu.mercadogratis.app.model.ProductStatus;
 import ar.edu.mercadogratis.app.service.ProductService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -30,6 +33,11 @@ public class ProductControllerTest {
 
     @Autowired
     private ProductService productService;
+
+    @AfterEach
+    public void tearDown() {
+        productService.deleteAll();
+    }
 
     @Test
     void testGetProduct() {
@@ -113,5 +121,32 @@ public class ProductControllerTest {
         // then
         assertThat(products.getBody()).hasSize(1);
         assertThat(products.getBody()[0]).isEqualTo(savedProduct);
+    }
+
+    @Test
+    void testSearchProduct_emptyStock() {
+
+        // given
+        Product product = Product.builder()
+                .name("celular samsung")
+                .description("description")
+                .category(ProductCategory.FASHION)
+                .price(new BigDecimal("10"))
+                .stock(0)
+                .seller("seller")
+                .status(ProductStatus.ACTIVE)
+                .build();
+
+        Product savedProduct = productService.saveProduct(product);
+
+        String nameQuery = "samsung";
+        String categoryQuery = ProductCategory.FASHION.name();
+        String url = String.format("http://localhost:%s/products/search?name=%s&category=%s", port, nameQuery, categoryQuery);
+
+        // when
+        ResponseEntity<Product[]> products = restTemplate.getForEntity(url, Product[].class);
+
+        // then
+        assertThat(products.getBody()).hasSize(0);
     }
 }

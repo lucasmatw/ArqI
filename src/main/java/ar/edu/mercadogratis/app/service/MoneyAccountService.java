@@ -15,6 +15,12 @@ public class MoneyAccountService {
 
     private final MoneyAccountRepository moneyAccountRepository;
 
+    public BigDecimal getFunds(User user) {
+        return moneyAccountRepository.getByUser(user)
+                .map(MoneyAccount::getBalance)
+                .orElseThrow(() -> new ValidationException("Money account not found for user: " + user.getEmail()));
+    }
+
     public MoneyAccount registerAccount(User user) {
         MoneyAccount account = MoneyAccount.builder()
                 .balance(BigDecimal.ZERO)
@@ -27,6 +33,10 @@ public class MoneyAccountService {
     public BigDecimal debitAmount(User user, BigDecimal amount) {
         MoneyAccount moneyAccount = moneyAccountRepository.getByUser(user)
                 .orElseThrow(() -> new ValidationException("Account not found for user"));
+
+        if(moneyAccount.getBalance().compareTo(amount) < 0) {
+            throw new ValidationException("No funds available");
+        }
 
         moneyAccount.subtractFromBalance(amount);
         moneyAccountRepository.save(moneyAccount);

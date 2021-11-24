@@ -14,7 +14,6 @@ public class ProductFieldMapper implements FieldSetMapper<Product> {
                 .category(ProductCategory.valueOf(fieldSet.readString(2)))
                 .price(fieldSet.readBigDecimal(3))
                 .stock(fieldSet.readInt(4))
-                .seller(fieldSet.readString(5))
                 .build();
     }
 }

@@ -13,4 +13,5 @@ public class SearchProductRequest {
     private Optional<ProductCategory> category;
     private Optional<BigDecimal> minPrice;
     private Optional<BigDecimal> maxPrice;
+    private int minStock;
 }

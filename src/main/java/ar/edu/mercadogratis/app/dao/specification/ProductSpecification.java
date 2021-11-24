@@ -20,6 +20,7 @@ public class ProductSpecification implements Specification<Product> {
     private static final String CATEGORY = "category";
     private static final String PRICE = "price";
     private static final String STATUS = "status";
+    private static final String STOCK = "stock";
 
     private final SearchProductRequest searchProductRequest;
 
@@ -37,6 +38,8 @@ public class ProductSpecification implements Specification<Product> {
                 predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get(PRICE), minPrice)));
         searchProductRequest.getMaxPrice().ifPresent(maxPrice ->
                 predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get(PRICE), maxPrice)));
+
+        predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get(STOCK), searchProductRequest.getMinStock()));
 
         return criteriaBuilder.and(predicates.toArray(Predicate[]::new));
     }

@@ -178,6 +178,17 @@
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <version>0.8.7</version>
+                <configuration>
+                    <excludes>
+                        <exclude>**/config/*</exclude>
+                        <exclude>**/exceptions/*</exclude>
+                        <exclude>**/filter/*</exclude>
+                        <exclude>**/model/*</exclude>
+                        <exclude>**/controller/*CustomGlobalExceptionHandlerController*</exclude>
+                        <exclude>**/controller/*ExceptionHandlerController*</exclude>
+                        <exclude>**/SpringBootHibernateApplication*</exclude>
+                    </excludes>
+                </configuration>
                 <executions>
                     <execution>
                         <id>default-prepare-agent</id>
@@ -197,13 +208,6 @@
                             <goal>check</goal>
                         </goals>
                         <configuration>
-                            <excludes>
-                                <exclude>**/config/*</exclude>
-                                <exclude>**/exceptions/*</exclude>
-                                <exclude>**/filter/*</exclude>
-                                <exclude>**/model/*</exclude>
-                                <exclude>**/SpringBootHibernateApplication*</exclude>
-                            </excludes>
                             <rules>
                                 <rule>
                                     <element>BUNDLE</element>

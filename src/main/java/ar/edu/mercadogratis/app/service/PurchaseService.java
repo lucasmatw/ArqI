@@ -20,6 +20,11 @@ public class PurchaseService {
 
     private final PurchaseEventProducerService purchaseEventProducerService;
 
+    public Iterable<PurchaseProduct> listPurchases(String buyerEmail) {
+        User buyer = userService.getUserForMail(buyerEmail);
+        return purchaseProductRepository.findByBuyer(buyer);
+    }
+
     public PurchaseProduct createPurchase(PurchaseRequest purchaseRequest) {
 
         PurchaseProduct purchaseProduct = productService.getProduct(purchaseRequest.getProductId())

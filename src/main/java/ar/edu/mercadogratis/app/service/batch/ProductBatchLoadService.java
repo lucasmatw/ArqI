@@ -3,6 +3,7 @@ package ar.edu.mercadogratis.app.service.batch;
 import ar.edu.mercadogratis.app.batch.ProductFieldMapper;
 import ar.edu.mercadogratis.app.batch.ProductItemProcessor;
 import ar.edu.mercadogratis.app.model.Product;
+import ar.edu.mercadogratis.app.model.User;
 import ar.edu.mercadogratis.app.service.DateService;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -40,12 +41,12 @@ public class ProductBatchLoadService {
     private final JobLauncher jobLauncher;
 
     @SneakyThrows
-    public BatchStatus loadCsvInput(InputStream inputStream) {
+    public BatchStatus loadCsvInput(User seller, InputStream inputStream) {
 
         Step step = stepFactory.get("product-file-load-step")
                 .<Product, Product>chunk(2)
                 .reader(buildProductItemReader(inputStream))
-                .processor(buildItemProcessor())
+                .processor(buildItemProcessor(seller))
                 .writer(productDbWriterService)
                 .build();
 
@@ -65,8 +66,8 @@ public class ProductBatchLoadService {
         return run.getStatus();
     }
 
-    private ItemProcessor<Product, Product> buildItemProcessor() {
-        return new ProductItemProcessor();
+    private ItemProcessor<Product, Product> buildItemProcessor(User seller) {
+        return new ProductItemProcessor(seller);
     }
 
 
@@ -85,7 +86,7 @@ public class ProductBatchLoadService {
 
         lineTokenizer.setDelimiter(DelimitedLineTokenizer.DELIMITER_COMMA);
         lineTokenizer.setStrict(false);
-        lineTokenizer.setNames("name", "description", "category", "price", "stock", "seller");
+        lineTokenizer.setNames("name", "description", "category", "price", "stock");
 
         FieldSetMapper<Product> setMapper = new ProductFieldMapper();
 

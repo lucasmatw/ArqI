@@ -16,11 +16,13 @@ Person(users, "Users", "Buyers/Sellers", $sprite="users")
 
 
 System(system, "Mercadogratis", "Marketplace for search, buy and sell items")
-System_Ext(gmail, "OAuth2 Google")
+System_Ext(gmail, "Google Mail")
+System_Ext(mailgun, "Mailgun")
 
 Rel(users, system, "uses")
 
-Rel_Right(system, gmail, "auth", "http")
+Rel(system, gmail, "send", "smtp")
+Rel(system, mailgun, "send", "smtp")
 
 
 @enduml

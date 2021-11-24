@@ -59,4 +59,34 @@ public class UserControllerTest {
         User createdUser = userService.getUser(response.getBody());
         assertThat(createdUser).isNotNull();
     }
+
+    @Test
+    void testLoginUser() throws JsonProcessingException {
+
+        // given
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        String url = String.format("http://localhost:%s/user/login", port);
+
+        User user = User.builder()
+                .name("a name")
+                .lastName("a lastname")
+                .email("an_email@mail.com")
+                .cuit("22332233")
+                .password("12345")
+                .build();
+
+        userService.addUser(user);
+        User savedUser = userService.getUserForMail("an_email@mail.com");
+
+        HttpEntity<String> request =
+                new HttpEntity<>(objectMapper.writeValueAsString(savedUser), headers);
+
+        // when
+        ResponseEntity<Long> response = restTemplate.postForEntity(url, request, Long.class);
+
+        // then
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody()).isNotNull();
+    }
 }

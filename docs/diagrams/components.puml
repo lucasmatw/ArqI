@@ -9,6 +9,8 @@ Container(webapp, "Web Application", "Angular", "Main interaction with Applicati
 
 ContainerDb(db, "Database", "MySQL", "Stores all entities and information")
 
+System_Ext(gmail, "Google Mail")
+System_Ext(mailgun, "Mailgun")
 
 Container_Boundary(api, "API Application") {
 
@@ -25,6 +27,10 @@ Container_Boundary(api, "API Application") {
 
     Rel(productSvc, db, "Read & write [JDBC]")
     Rel(loginSvc, db, "Read & write [JDBC]")
+
+    Rel(loginSvc, gmail, "Send mail [SMTP]")
+    Rel(loginSvc, mailgun, "Send mail [SMTP]")
+
 }
 
 Rel(webapp, productCtrl, "uses", "JSON HTTPS")

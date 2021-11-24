@@ -13,21 +13,23 @@ title "Mercadogratis - Container view"
 LAYOUT_TOP_DOWN()
 
 Component_Ext(public_api, "Gateway heroku", "HTTPS")
-System_Ext(gmail, "OAuth2 Google")
+System_Ext(gmail, "Google Mail")
+System_Ext(mailgun, "Mailgun")
 
-
-System_Boundary(system, "System"){
+System_Boundary(system, "Heroku cloud"){
 	System_Boundary(app_fe, "Frontend"){
 	    Component(angular, "Client side App", "Angular", $sprite="angular")
 	}
 	System_Boundary(app_be, "Backend"){
 	    Component(backend, "Backend", "Java", $sprite="java")
-	    ComponentDb(mysql,"MySQL", "Items schema", $sprite="mysql")
+	    ComponentDb(mysql,"ClearDB", "SQL", $sprite="mysql")
 	}
 }
 
 Rel(public_api, angular, "Uses", "https")
-Rel_Right(angular, gmail, "auth")
+Rel_Right(backend, gmail, "send")
+Rel_Right(backend, mailgun, "send")
+
 Rel(angular, backend, "Uses", "https")
 Rel(backend, mysql, "Read/Write")
 @enduml

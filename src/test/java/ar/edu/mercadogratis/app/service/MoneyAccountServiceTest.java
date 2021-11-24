@@ -37,6 +37,7 @@ public class MoneyAccountServiceTest {
     @MockBean
     private MoneyAccountRepository moneyAccountRepository;
 
+
     @Test
     public void testRegisterAccount() {
 
