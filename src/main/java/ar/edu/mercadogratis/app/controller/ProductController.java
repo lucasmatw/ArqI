@@ -64,6 +64,7 @@ public class ProductController {
                 .name(name)
                 .maxPrice(maxPrice)
                 .minPrice(minPrice)
+                .minStock(1)
                 .build();
         return productService.searchProduct(search);
     }

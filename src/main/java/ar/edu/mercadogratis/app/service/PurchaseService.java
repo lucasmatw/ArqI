@@ -18,6 +18,12 @@ public class PurchaseService {
     private final DateService dateService;
     private final MoneyAccountService moneyAccountService;
 
+
+    public Iterable<PurchaseProduct> listPurchases(String buyerEmail) {
+        User buyer = userService.getUserForMail(buyerEmail);
+        return purchaseProductRepository.findByBuyer(buyer);
+    }
+
     public PurchaseProduct createPurchase(PurchaseRequest purchaseRequest) {
 
         PurchaseProduct purchaseProduct = productService.getProduct(purchaseRequest.getProductId())

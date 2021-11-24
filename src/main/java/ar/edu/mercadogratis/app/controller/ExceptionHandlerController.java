@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import javax.validation.ValidationException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,6 +21,11 @@ public class ExceptionHandlerController {
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<ApiError> handleNotFoundException(NotFoundException e) {
         return handleErrorResponse(e, HttpStatus.NOT_FOUND.value());
+    }
+
+    @ExceptionHandler(ValidationException.class)
+    public ResponseEntity<ApiError> handleValidationException(ValidationException e) {
+        return handleErrorResponse(buildApiError(e));
     }
 
     public ResponseEntity<ApiError> handleErrorResponse(ApiException e, int httpStatus) {
@@ -36,6 +42,13 @@ public class ExceptionHandlerController {
                 .cause(e.getCode())
                 .message(e.getDescription())
                 .status(status)
+                .build();
+    }
+
+    private ApiError buildApiError(ValidationException validationException) {
+        return ApiError.builder()
+                .message(validationException.getMessage())
+                .status(HttpStatus.BAD_REQUEST.value())
                 .build();
     }
 }

@@ -114,4 +114,31 @@ public class ProductControllerTest {
         assertThat(products.getBody()).hasSize(1);
         assertThat(products.getBody()[0]).isEqualTo(savedProduct);
     }
+
+    @Test
+    void testSearchProduct_emptyStock() {
+
+        // given
+        Product product = Product.builder()
+                .name("celular samsung")
+                .description("description")
+                .category(ProductCategory.FASHION)
+                .price(new BigDecimal("10"))
+                .stock(0)
+                .seller("seller")
+                .status(ProductStatus.ACTIVE)
+                .build();
+
+        Product savedProduct = productService.saveProduct(product);
+
+        String nameQuery = "samsung";
+        String categoryQuery = ProductCategory.FASHION.name();
+        String url = String.format("http://localhost:%s/products/search?name=%s&category=%s", port, nameQuery, categoryQuery);
+
+        // when
+        ResponseEntity<Product[]> products = restTemplate.getForEntity(url, Product[].class);
+
+        // then
+        assertThat(products.getBody()).hasSize(0);
+    }
 }

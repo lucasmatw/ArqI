@@ -1,0 +1,45 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+autonumber
+
+actor client
+
+box Spring BE
+control PurchaseController
+participant PurchaseService
+participant ProductService
+participant UserService
+participant PurchaseProductRepository
+participant MoneyAccountService
+
+
+end box
+database DB
+
+box Kafka cluster #FFAAAA
+queue Kafka
+end box
+
+client -> PurchaseController: POST purchase
+
+
+PurchaseController -> PurchaseService: createPurchase
+PurchaseService -> ProductService: getProduct
+ProductService -> PurchaseService: product
+PurchaseService -> ProductService: reduce stock
+PurchaseService -> UserService: get buyer and seller
+
+PurchaseService -> MoneyAccountService: debit buyer account
+PurchaseService -> MoneyAccountService: credit seller account
+
+PurchaseService -> PurchaseService: build purchase
+PurchaseService -> PurchaseProductRepository: save
+
+PurchaseProductRepository -> DB: save
+
+PurchaseService -> Kafka: publish purchase
+
+PurchaseService -> PurchaseController: saved PurchaseProduct
+
+@enduml
