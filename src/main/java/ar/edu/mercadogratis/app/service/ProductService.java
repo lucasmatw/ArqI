@@ -52,4 +52,9 @@ public class ProductService {
     public List<Product> searchProduct(SearchProductRequest searchProductRequest) {
         return productRepository.findAll(new ProductSpecification(searchProductRequest));
     }
+
+    @Transactional
+    public void deleteAll() {
+        productRepository.deleteAll();
+    }
 }

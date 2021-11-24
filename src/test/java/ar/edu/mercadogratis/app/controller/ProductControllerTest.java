@@ -34,12 +34,9 @@ public class ProductControllerTest {
     @Autowired
     private ProductService productService;
 
-    @Autowired
-    private ProductRepository productRepository;
-
     @AfterEach
     public void tearDown() {
-        productRepository.deleteAll();
+        productService.deleteAll();
     }
 
     @Test
